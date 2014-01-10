@@ -3,7 +3,10 @@ package edu.nimbus.glass.robotvoicecontrol;
 import java.util.ArrayList;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
+
+import com.google.android.glass.app.Card;
 
 
 
@@ -15,6 +18,7 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.speech.RecognizerIntent;
 import android.util.Log;
+import android.view.View;
 
 /**
  * Activity to transmit voice commands to the ROS Server from google glass.
@@ -23,7 +27,7 @@ import android.util.Log;
  */
 public class VoiceControlActivity extends Activity {
 	/** This line must be updated to ensure that the glass connects to the correct webserver that is running ROS */
-	public final static String HOST_ADDRESS = "ws://10.214.33.96:9090";
+	public final static String HOST_ADDRESS = "ws://10.214.32.106:9090";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,7 +44,12 @@ public class VoiceControlActivity extends Activity {
     		Log.d("Voice Results", voiceResults.get(i));
     		command = voiceResults.get(i);
     	}
+    	Card card1 = new Card(getBaseContext());
+    	card1.setText("Sending Command:\n" + command);
+    	// Don't call this if you're using TimelineManager
+    	View card1View = card1.toView();
     	sendMessage(command);
+    	setContentView(card1View);
     }
    
     /**
@@ -89,10 +98,24 @@ public class VoiceControlActivity extends Activity {
 				@Override
 				public void onTextMessage(String payload) {
 					Log.d("Main Payload", payload);
-					//We got a message back from the server so lets create the cards for selection.
+					String result_string = "Falure";
+					try {
+						JSONObject res = new JSONObject(payload);
+						if(res.getBoolean("result") == false){
+							result_string = "Service Falure";
+						}else{
+							result_string = res.getJSONObject("values").getString("result");
+						}
+					} catch (JSONException e) {
+					}
 					
-							
-					mConnection.disconnect();
+					//We got a message back from the server so lets create the cards for selection.
+					Card card1 = new Card(getBaseContext());
+			    	card1.setText("Done :\n" + result_string);
+			    	// Don't call this if you're using TimelineManager
+			    	View card1View = card1.toView();
+			    	setContentView(card1View);
+					mConnection.disconnect();					
 					finish();
 					
 				}
