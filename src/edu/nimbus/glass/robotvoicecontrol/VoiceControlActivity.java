@@ -16,14 +16,15 @@ import android.app.Activity;
 import android.speech.RecognizerIntent;
 import android.util.Log;
 
-
+/**
+ * Activity to transmit voice commands to the ROS Server from google glass.
+ * @author ataylor
+ *
+ */
 public class VoiceControlActivity extends Activity {
 	/** This line must be updated to ensure that the glass connects to the correct webserver that is running ROS */
 	public final static String HOST_ADDRESS = "ws://10.214.33.96:9090";
     @Override
-    
-    
-    
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
