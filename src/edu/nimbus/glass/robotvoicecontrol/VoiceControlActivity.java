@@ -26,6 +26,7 @@ import android.view.View;
  *
  */
 public class VoiceControlActivity extends Activity {
+	
 	/** This line must be updated to ensure that the glass connects to the correct webserver that is running ROS */
 	public final static String HOST_ADDRESS = "ws://10.214.32.106:9090";
     @Override
@@ -36,6 +37,8 @@ public class VoiceControlActivity extends Activity {
     @Override
     protected void onResume(){
     	super.onResume();
+    	
+    	//Get the voice results and send them to the server.
     	String command = "";
     	ArrayList<String> voiceResults = getIntent().getExtras()
     	        .getStringArrayList(RecognizerIntent.EXTRA_RESULTS);
@@ -67,6 +70,7 @@ public class VoiceControlActivity extends Activity {
 			Log.d("Socket", "Atempting connection");
 			mConnection.connect(url, new WebSocketHandler(){
 
+				boolean message_received = false;
 				@Override
 				public void onOpen() {
 					//send the request
@@ -108,7 +112,7 @@ public class VoiceControlActivity extends Activity {
 						}
 					} catch (JSONException e) {
 					}
-					
+					message_received = true;
 					//We got a message back from the server so lets create the cards for selection.
 					Card card1 = new Card(getBaseContext());
 			    	card1.setText("Done :\n" + result_string);
@@ -122,9 +126,17 @@ public class VoiceControlActivity extends Activity {
 
 				@Override
 				public void onClose(int code, String reason) {
-						//DOn't need to do anything.
+					Log.d("WEBSOCKET CLOSE", code + "");
+					//If connection is lost change the view.
+					if (code == 3 && !message_received){
+						Card card1 = new Card(getBaseContext());
+				    	card1.setText("No Web Connection");
+						View card1View = card1.toView();
+				    	setContentView(card1View);
+						
+					}
 				}
-
+				
 			});
 			
 		}catch (Exception e){
