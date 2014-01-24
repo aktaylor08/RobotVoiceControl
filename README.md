@@ -3,8 +3,8 @@ RobotVoiceControl
 
 Sample Glass Application to demonstrate robot voice control.
 
-This app allows the user to send voice commands to a ROS system using a websocket connection and (rosbridge)[rosbrige.org].
-This application also relies on the voice_command.py from the (ros_glass_tools package)[https://github.com/aktaylor08/ros_glass_tools].
+This app allows the user to send voice commands to a ROS system using a websocket connection and the [rosbridge webserver](rosbrige.org).
+This application also relies on the voice_command.py from the [ros_glass_tools package](https://github.com/aktaylor08/ros_glass_tools).
 
 Can send defined commands to all robots or single robots using customized ROS launch files. 
 
