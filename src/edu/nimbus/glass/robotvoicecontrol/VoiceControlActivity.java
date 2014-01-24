@@ -71,7 +71,7 @@ public class VoiceControlActivity extends Activity {
     }
    
     /**
-     * Send the command to the ROS Server on the specilized topic and wait for the reply back.
+     * Send the command to the ROS Server on the specialized topic and wait for the reply back.
      * @param command
      */
     private void sendMessage(String command) {
@@ -114,6 +114,9 @@ public class VoiceControlActivity extends Activity {
 
 				}
 
+				/** 
+				 * Display the message we recieved back and close the application.
+				 */
 				@Override
 				public void onTextMessage(String payload) {
 					Log.d("Main Payload", payload);
@@ -139,6 +142,9 @@ public class VoiceControlActivity extends Activity {
 					
 				}
 
+				/**
+				 * If it is closed than we have a poor web connection.  Let the user know.
+				 */
 				@Override
 				public void onClose(int code, String reason) {
 					Log.d("WEBSOCKET CLOSE", code + "");
